@@ -20,8 +20,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    # apps
+    'main',
+    'users',
+    'projects',
+    
     #3-rd party
-    'restframework',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -86,7 +91,7 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'Europe/Moskow'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 

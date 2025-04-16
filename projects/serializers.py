@@ -25,6 +25,12 @@ class ProjectSerializer(serializers.ModelSerializer):
     boards = BoardSerializer(read_only = True)
     members = UserSerializer(many=True, read_only = True)
     team_lead = UserSerializer(read_only=True)
+    
     class Meta:
         model = Project
         fields = ("id", "title", "description", "boards", "team_lead", "members")
+        
+    def create(self, validated_data):
+      project = Project.objects.create(**validated_data)
+      Board.objects.create(project = project)
+      return project

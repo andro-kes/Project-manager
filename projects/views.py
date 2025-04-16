@@ -8,13 +8,11 @@ class BaseProjectAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 class CreateProjectAPIView(BaseProjectAPIView, generics.CreateAPIView):
-    def perform_create(self, serializer):
-        project = serializer.save()
-        Board.objects.create(project=project)
-    
-class GetProjectAPIView(BaseProjectAPIView, generics.RetrieveAPIView):
     pass
+    
+class RetrieveProjectAPIView(BaseProjectAPIView, generics.RetrieveAPIView):
+    queryset = Project.objects.all().prefetch_related("board")
 
 class GetBoardAPIView(generics.RetrieveAPIView):
-    queryset = Board.objects.all()
+    queryset = Board.objects.all().prefetch_related("tasks")
     serializer_class = BoardSerializer    

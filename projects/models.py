@@ -15,7 +15,7 @@ class Project(models.Model):
     
     
 class Board(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="boards")
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="board")
     
     def __str__(self):
         return f'{self.project.title}'

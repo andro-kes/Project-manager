@@ -34,7 +34,7 @@ class Task(models.Model):
         ],
         default="medium",
     )
-    assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="tasks")
+    assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="tasks", null=True)
     
     def __str__(self):
-        return self.head
+        return self.title

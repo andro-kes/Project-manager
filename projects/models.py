@@ -11,6 +11,8 @@ class Project(models.Model):
     members = models.ManyToManyField(User, related_name="projects_members", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    group_url = models.CharField(max_length=255, blank=True)    
+
     def __str__(self):
         return self.title
 
@@ -40,3 +42,7 @@ class Task(models.Model):
 
     def __str__(self):
         return self.head
+=======
+    
+    def __str__(self):
+        return self.title

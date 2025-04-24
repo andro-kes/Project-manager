@@ -11,9 +11,15 @@ class UserSerializer(serializers.ModelSerializer):
         
 class TaskSerializer(serializers.ModelSerializer):
     assigned_to = UserSerializer(read_only=True)
+    assigned_to_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        write_only=True,  
+        source='assigned_to',  
+        allow_null=True 
+    )
     class Meta:
         model = Task
-        fields = ("id", "title", "description", "priority", "created_at", "board", "assigned_to")
+        fields = ("id", "title", "description", "priority", "created_at", "board", "assigned_to", "assigned_to_id")
         
 class BoardSerializer(serializers.ModelSerializer):
     tasks = TaskSerializer(many=True, read_only=True)

@@ -8,8 +8,12 @@ class BaseProjectAPIView(generics.GenericAPIView):
     serializer_class = ProjectSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-class CreateProjectAPIView(BaseProjectAPIView, generics.CreateAPIView):
-    pass
+class CreateProjectAPIView(generics.CreateAPIView, BaseProjectAPIView):
+    def get_serializer_context(self):
+        return {'request': self.request}
+    
+    def perform_create(self, serializer):
+        serializer.save()
     
 class RetrieveProjectAPIView(BaseProjectAPIView, generics.RetrieveAPIView):
     queryset = Project.objects.all().prefetch_related("board")

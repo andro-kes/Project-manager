@@ -28,15 +28,23 @@ class BoardSerializer(serializers.ModelSerializer):
         fields = ("id", "project", "tasks")
         
 class ProjectSerializer(serializers.ModelSerializer):
-    boards = BoardSerializer(read_only = True)
-    members = UserSerializer(many=True, read_only = True)
+    boards = BoardSerializer(read_only=True, many=True)
+    members = UserSerializer(many=True, read_only=True)
     team_lead = UserSerializer(read_only=True)
-    
+
     class Meta:
         model = Project
         fields = ("id", "title", "description", "boards", "team_lead", "members")
-        
+
     def create(self, validated_data):
-      project = Project.objects.create(**validated_data)
-      Board.objects.create(project = project)
-      return project
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            validated_data['team_lead'] = request.user 
+        else:
+            raise serializers.ValidationError("Пользователь не зарегистрирован.")
+
+        members_data = validated_data.pop('members', [])
+        project = Project.objects.create(**validated_data)
+        Board.objects.create(project=project)
+
+        return project

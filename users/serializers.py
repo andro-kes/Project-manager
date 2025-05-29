@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from profiles.models import Profile
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,6 +14,9 @@ class UserSerializer(serializers.ModelSerializer):
         user = User(**validated_data)
         user.set_password(password)
         user.save()
+
+        Profile.objects.create(user=user)
+
         return user
 
 

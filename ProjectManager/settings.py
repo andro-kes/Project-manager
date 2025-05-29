@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'users',
     'main',
     'projects',
+    'profiles',
 
     # 3-rd party
     'rest_framework',

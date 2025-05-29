@@ -2,5 +2,8 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    def __str__(self):
-        return self.username
+    def save(self, *args, **kwargs):
+        created = not self.pk
+        super().save(*args, **kwargs)
+        if created:
+            Profile.objects.get_or_create(user=self)

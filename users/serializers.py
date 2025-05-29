@@ -12,9 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
         password = validated_data.pop('password')
         user = User(**validated_data)
         user.set_password(password)
-        user.save()
         try:
-            user = serializer.save()
+            user.save()  
+        except Exception as e:  
+            user.delete()
+            raise ValueError(f"Не удалось создать пользователя: {e}")
+
         return user
 
 

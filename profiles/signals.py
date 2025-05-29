@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+''''from django.db.models.signals import post_save
 from django.dispatch import receiver
 from users.models import User
 from profiles.models import Profile
@@ -10,4 +10,4 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+    instance.profile.save()'''

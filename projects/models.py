@@ -38,6 +38,15 @@ class Task(models.Model):
         ],
         default="medium",
     )
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ("to do", "To Do"),
+            ("in progress", "In Progress"),
+            ("done", "Done"),
+        ],
+        default="to do",
+    )
     assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="tasks", null=True)
 
     def __str__(self):

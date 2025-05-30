@@ -1,6 +1,9 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions
+from django.http import HttpResponse, JsonResponse
 from .permissions import IsTeamLead
 from .models import Board, Project, Task
+from users.models import User
 from .serializers import ProjectSerializer, BoardSerializer, TaskSerializer
 
 class BaseProjectAPIView(generics.GenericAPIView):
@@ -73,3 +76,40 @@ class DeleteTaskAPIView(generics.DestroyAPIView):
             except Board.DoesNotExist:
                 pass 
         return Task.objects.none()  
+    
+def add_member(project_id, user_id):
+    try:
+        project = get_object_or_404(Project, pk=project_id) 
+        user = get_object_or_404(User, pk=user_id) 
+
+        if user in project.members.all():
+            return JsonResponse({"message: Пользователь уже в проекте"}, status=200)
+
+        project.members.add(user)
+        project.save() 
+
+        return JsonResponse(project.members, status=200)
+
+    except Exception as e:
+        print(f"Error adding member to project: {e}") 
+        return JsonResponse({"message": f"Ошибка {e}"}, status=500)
+
+def change_task_status(request, task_id):
+    if request.method == 'POST':  
+        try:
+            task = get_object_or_404(Task, pk=task_id) 
+            new_status = request.POST.get('status')  
+
+            if new_status in [choice[0] for choice in Task.status.field.choices]: 
+                task.status = new_status
+                task.save()
+                return JsonResponse({"new status": task.status}, status=200)  # Success
+            else:
+                return JsonResponse({'error': 'Неверный статус'}, status=400) 
+
+        except Exception as e:
+            print(f"Error changing task status: {e}")
+            return JsonResponse({'error': 'Failed to update task status.'}, status=500) # Internal Server Error
+
+    else:
+        return HttpResponse(status=405)  
